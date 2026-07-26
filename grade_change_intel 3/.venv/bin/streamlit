@@ -1,0 +1,8 @@
+#!/bin/sh
+'''exec' "/Users/ananyajain/Desktop/grade_change/grade_change_intel 3/.venv/bin/python3" "$0" "$@"
+' '''
+import sys
+from streamlit.web.cli import main
+if __name__ == '__main__':
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
+    sys.exit(main())

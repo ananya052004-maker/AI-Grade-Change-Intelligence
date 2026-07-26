@@ -1,0 +1,10 @@
+# Physical actuator operating ranges and max ramp rates -- distinct from the
+# DR-04 sensor sanity range in tags.yaml (which just rejects impossible
+# readings). These are the real operating envelope the safety gate (FR-14)
+# and constraint-proximity features (M2) check against.
+
+actuator_limits:
+  STOCK_FLOW: {lo: 60, hi: 160, ramp_rate_max_per_s: 3.0}
+  FILLER_FLOW: {lo: 10, hi: 40, ramp_rate_max_per_s: 1.0}
+  STEAM_PRESS_G1: {lo: 20, hi: 55, ramp_rate_max_per_s: 1.5}
+  MACHINE_SPEED: {lo: 600, hi: 1200, ramp_rate_max_per_s: 10.0}

@@ -1,0 +1,41 @@
+# Normative defaults — verbatim from PRD-GCI-001 Appendix B.
+# NFR-9: config over code. No magic numbers belong in application source.
+
+spec:
+  bw_band_pct: 2.5
+  persist_scans: 3
+
+stab:
+  band_pct: 1.0
+  hold_s: 120
+
+predict:
+  horizon_s: 180
+  extra_horizons_s: [60, 300]
+  cycle_s: 5
+
+risk_thresholds:
+  watch: 0.30
+  at_risk: 0.60
+  critical: 0.85
+
+suggest:
+  min_interval_s: 60
+  ttl_s: 300
+  max_per_set: 3
+
+correlation:
+  max_lag_s: 300
+  fdr_q: 0.05
+  min_support_transitions: 10
+
+drift:
+  psi_threshold: 0.25
+
+data:
+  resample_s: 5
+  max_forward_fill_scans: 2
+  clock_skew_warn_s: 2
+  clock_skew_disable_s: 30
+
+machine_id: PM1

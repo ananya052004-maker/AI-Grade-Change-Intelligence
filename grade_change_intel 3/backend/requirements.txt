@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+websockets
+pydantic>=2
+PyYAML
+pandas
+numpy
+pyarrow
+xgboost
+shap
+scipy
+scikit-learn
+joblib
+httpx
+pytest
+pytest-asyncio
+eval_type_backport

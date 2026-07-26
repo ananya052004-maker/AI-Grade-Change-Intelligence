@@ -1,0 +1,149 @@
+# DR-02: tag mapping lives in a single declarative config. No tag name may be
+# hard-coded in application logic — features/, models/, correlation/ all resolve
+# tags through app.ingestion.tag_registry, which reads this file.
+#
+# site_tag  -> the raw historian/OPC-UA tag name at a hypothetical real site
+#              (shown here as an illustrative example of DR-02's remapping
+#              capability; the replay/simulator adapters emit `canonical`
+#              names directly, so site_tag is documentation, not load-bearing,
+#              for this MVP's data path).
+# canonical -> the name every downstream module uses
+# unit      -> validated at ingest (E-05); mismatch is a startup failure
+# class     -> §5.2 tag class
+# range     -> [lo, hi] physically-possible range for DR-04 clamp-and-flag
+
+tags:
+  # ---- Primary quality (targets) ----
+  - site_tag: PM1.SCANNER.BW.PV
+    canonical: BW_MEAS
+    unit: gsm
+    class: primary_quality
+    range: [0, 400]
+  - site_tag: PM1.QCS.BW.SP
+    canonical: BW_SP
+    unit: gsm
+    class: primary_quality
+    range: [0, 400]
+  - site_tag: PM1.SCANNER.MOISTURE.PV
+    canonical: MOIST_MEAS
+    unit: pct
+    class: primary_quality
+    range: [0, 100]
+  - site_tag: PM1.QCS.MOISTURE.SP
+    canonical: MOIST_SP
+    unit: pct
+    class: primary_quality
+    range: [0, 100]
+  - site_tag: PM1.SCANNER.ASH.PV
+    canonical: ASH_MEAS
+    unit: pct
+    class: primary_quality
+    range: [0, 100]
+  - site_tag: PM1.SCANNER.CALIPER.PV
+    canonical: CALIPER_MEAS
+    unit: um
+    class: primary_quality
+    range: [0, 1000]
+
+  # ---- Manipulated (actionable) ----
+  - site_tag: PM1.DCS.STOCK_FLOW.PV
+    canonical: STOCK_FLOW
+    unit: lpm
+    class: manipulated
+    range: [0, 500]
+  - site_tag: PM1.DCS.STOCK_FLOW.SP
+    canonical: STOCK_FLOW_SP
+    unit: lpm
+    class: manipulated
+    range: [0, 500]
+  - site_tag: PM1.DCS.FILLER_FLOW.PV
+    canonical: FILLER_FLOW
+    unit: lpm
+    class: manipulated
+    range: [0, 200]
+  - site_tag: PM1.DCS.FILLER_FLOW.SP
+    canonical: FILLER_FLOW_SP
+    unit: lpm
+    class: manipulated
+    range: [0, 200]
+  - site_tag: PM1.DCS.STEAM_PRESS_G1.PV
+    canonical: STEAM_PRESS_G1
+    unit: kPa
+    class: manipulated
+    range: [0, 600]
+  - site_tag: PM1.DCS.MACHINE_SPEED.PV
+    canonical: MACHINE_SPEED
+    unit: mpm
+    class: manipulated
+    range: [0, 2000]
+  - site_tag: PM1.DCS.MACHINE_SPEED.SP
+    canonical: MACHINE_SPEED_SP
+    unit: mpm
+    class: manipulated
+    range: [0, 2000]
+
+  # ---- Context / disturbance ----
+  - site_tag: PM1.DCS.HEADBOX_CONSISTENCY.PV
+    canonical: HEADBOX_CONSISTENCY
+    unit: pct
+    class: context
+    range: [0, 10]
+  - site_tag: PM1.MET.DRYER_HOOD_HUMID.PV
+    canonical: DRYER_HOOD_HUMID
+    unit: pct
+    class: context
+    range: [0, 100]
+  - site_tag: PM1.DCS.RETENTION_AID_FLOW.PV
+    canonical: RETENTION_AID_FLOW
+    unit: lpm
+    class: context
+    range: [0, 50]
+  - site_tag: PM1.MIS.BROKE_RATIO.PV
+    canonical: BROKE_RATIO
+    unit: pct
+    class: context
+    range: [0, 100]
+
+  # ---- Controller state ----
+  - site_tag: PM1.QCS.MPC_MODE
+    canonical: MPC_MODE
+    unit: enum
+    class: controller_state
+    range: null
+  - site_tag: PM1.QCS.GC_PHASE
+    canonical: GC_PHASE
+    unit: enum
+    class: controller_state
+    range: null
+  - site_tag: PM1.QCS.GC_PROGRESS_PCT
+    canonical: GC_PROGRESS_PCT
+    unit: pct
+    class: controller_state
+    range: [0, 100]
+
+  # ---- Health / validity ----
+  - site_tag: PM1.SCANNER.VALID
+    canonical: SCANNER_VALID
+    unit: bool
+    class: health
+    range: null
+  - site_tag: PM1.SCANNER.STANDARDIZING
+    canonical: SCANNER_STANDARDIZING
+    unit: bool
+    class: health
+    range: null
+  - site_tag: PM1.DCS.SHEET_BREAK
+    canonical: SHEET_BREAK
+    unit: bool
+    class: health
+    range: null
+
+# FR-01: these are the tags required for a transition assessment to start (DR-01).
+# Missing any of these => System MUST refuse to start and MUST name the missing tag.
+required_for_assessment:
+  - BW_MEAS
+  - BW_SP
+  - STOCK_FLOW
+  - FILLER_FLOW
+  - STEAM_PRESS_G1
+  - MACHINE_SPEED

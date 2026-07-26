@@ -1,0 +1,21 @@
+# FR-24: distinguishes correlations the control model ALREADY accounts for
+# ("known") from everything else ("novel", subject to the FR-25 FDR gate).
+# A tag pair listed here is treated as already-modelled by the QCS/MD-MPC
+# control loop, so even a strong correlation is not flagged as a discovery.
+
+known_relationships:
+  - variable: STOCK_FLOW
+    target: BW_MEAS
+    reason: "Direct MD-MPC manipulated variable for basis weight control"
+  - variable: FILLER_FLOW
+    target: ASH_MEAS
+    reason: "Direct MD-MPC manipulated variable for ash control"
+  - variable: STEAM_PRESS_G1
+    target: MOIST_MEAS
+    reason: "Direct MD-MPC manipulated variable for moisture control"
+  - variable: MACHINE_SPEED
+    target: BW_MEAS
+    reason: "Coordinated ramp variable, already modelled in grade-change trajectory calc"
+  - variable: MACHINE_SPEED
+    target: MOIST_MEAS
+    reason: "Speed affects dryer residence time; already in MD-MPC gain matrix"

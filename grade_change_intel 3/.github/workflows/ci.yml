@@ -1,0 +1,48 @@
+# SEC-07: "Dependency scanning (SBOM) in CI; no known-critical CVEs at
+# release." pip-audit / npm audit are the lightweight, no-account-needed
+# stand-ins for a full SBOM pipeline -- real CVE-gating needs a live CI
+# runner and a policy for what blocks a release, which is out of scope for
+# a local-repo build (see docs/TRACEABILITY_MATRIX.md). This workflow is a
+# real, runnable stub: it executes the test suite and flags known CVEs, it
+# just doesn't (yet) hard-block merges on the audit step.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: Run test suite (incl. safety gate + edge cases)
+        run: pytest tests/ -v
+      - name: Dependency vulnerability scan (SEC-07)
+        run: |
+          pip install pip-audit
+          pip-audit --strict || echo "::warning::pip-audit found known CVEs -- review before release"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - name: Type-check and build
+        run: npm run build
+      - name: Dependency vulnerability scan (SEC-07)
+        run: npm audit --audit-level=high || echo "::warning::npm audit found known CVEs -- review before release"
