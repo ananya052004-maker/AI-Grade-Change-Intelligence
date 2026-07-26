@@ -1,18 +1,18 @@
-# Python
-backend/.venv/
-__pycache__/
+# Python -- depth-agnostic (**/) so these match no matter how deep the
+# actual project folder sits relative to the repo root
+**/.venv/
+**/__pycache__/
 *.pyc
 
 # Node
-frontend/node_modules/
-frontend/dist/
+**/node_modules/
+**/dist/
 
 # Generated data / db / model artifacts
-backend/data/*.parquet
-backend/data/*.csv
-backend/data/*.db
-backend/data/model_registry/
-data/feedback.db
+**/*.parquet
+**/data/*.csv
+**/*.db
+**/model_registry/
 
 # OS
 .DS_Store
